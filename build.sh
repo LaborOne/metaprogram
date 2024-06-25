@@ -1,1 +1,1 @@
-g++ main.cc -o test.out -std=c++20 -O3 -Werror
+g++ main.cc -o test.out -I./ -std=c++20 -O3 -Werror
