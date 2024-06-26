@@ -16,7 +16,7 @@ template <> struct print<Empty> {
   void operator()() { std::cout << "nil "; }
 };
 template <is_val val> struct print<val> {
-  void operator()() { std::cout << val::vuale << " "; }
+  void operator()() { std::cout << val::value << " "; }
 };
 template <class node, is_list next> struct print<List<node, next>> {
   void operator()() { print<node>{}(); }

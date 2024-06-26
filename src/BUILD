@@ -4,6 +4,11 @@ cc_library(
   visibility = ["//visibility:public"],
 )
 cc_library(
+  name = "function_operator",
+  hdrs = ["function_operator.hpp"],
+  visibility = ["//visibility:public"],
+)
+cc_library(
   name = "list_base",
   hdrs = ["list_base.hpp"],
   visibility = ["//visibility:public"],
@@ -21,6 +26,14 @@ cc_library(
   deps = ["//src:list_base", "//src:tuple_helper"],
   visibility = ["//visibility:public"],
 )
+
+cc_library(
+  name = "algorithm",
+  hdrs = ["algorithm.hpp"],
+  deps = ["//src:list_base", "//src:list", "//src:tree_base", "//src:function_operator"],
+  visibility = ["//visibility:public"],
+)
+
 cc_library(
   name = "tree",
   hdrs = ["tree.hpp"],

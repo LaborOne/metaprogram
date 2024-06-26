@@ -8,6 +8,7 @@ namespace wm {
  * define tree  opeator
  * insert :: (is_val a) => node a -> a -> node a
  * height :: (is_node a) => a ->uint32_t
+ * list2tree :: list a => node a
  * flat_tree :: (is_node a) => a -> tuple a // return  a tuple as the result of
  * bfs of a tree. the empty node would be return.
  */
@@ -66,7 +67,7 @@ struct flat_tree_impl_detail<List<val, next>, 0> {
 template <is_node val, is_list next, uint32_t Num>
 struct flat_tree_impl_detail<List<val, next>, Num> {
   using type =
-      tuple_cat<to_tuple<List<val, next>>, std::tuple<Enter>,
+      tuple_cat<list2tuple<List<val, next>>, std::tuple<Enter>,
                 typename flat_tree_impl_detail<
                     unpack_list_of_node<List<val, next>>, Num - 1>::type>;
 };
@@ -76,10 +77,22 @@ template <is_node root> struct flat_tree_impl {
   using type =
       typename detail::flat_tree_impl_detail<List<root>, height<root>()>::type;
 };
+
+template <is_list> struct list2tree_impl;
+template <is_val val, is_list next> struct list2tree_impl<List<val, next>> {
+  using type =
+      typename insert_impl<typename list2tree_impl<next>::type, val>::type;
+};
+
+template <is_val val> struct list2tree_impl<List<val, EmptyList>> {
+  using type = Node<val>;
+};
 } // namespace detail
 
 template <is_node Root, is_val Val>
 using insert = detail::insert_impl<Root, Val>::type;
 
 template <is_node root> using flat_tree = detail::flat_tree_impl<root>::type;
+
+template <is_list T> using list2tree = detail::list2tree_impl<T>::type;
 } // namespace wm

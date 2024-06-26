@@ -1,10 +1,12 @@
 #pragma once
 #include <type_traits>
+
 /*
  *define base tree node and some type_traits about tree node.
  */
 namespace wm {
 struct Empty;
+
 // val traits
 template <class T, class = void> struct is_val_impl : std::false_type {};
 template <class T>
@@ -13,7 +15,6 @@ struct is_val_impl<
     : std::true_type {};
 template <class T> inline constexpr bool is_val_type_v = is_val_impl<T>::value;
 template <class T> concept is_val = is_val_type_v<T>;
-
 // black_tag define
 template <bool> struct black_tag : std::false_type {};
 template <> struct black_tag<true> : std::true_type {};

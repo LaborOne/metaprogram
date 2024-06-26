@@ -6,13 +6,14 @@
 
 /*
  * define operator about list
- * len :: a => list a -> int32_t
- * push :: a => list a -> a -> list a
- * join :: a => list a -> list a -> list a
- * to_tuple :: a => list a -> tuple a
- * head :: a => list a -> a @todo
- * tail :: a => list a -> a @todo
- * pop :: a => list a -> list a @todo
+ * length :: list a -> int32_t
+ * push :: list a -> a -> list a
+ * join :: list a -> list a -> list a
+ * list2tuple :: list a -> tuple a
+ * make_list :: a -> list a
+ * head :: list a -> a @todo
+ * tail :: list a -> a @todo
+ * pop :: list a -> list a @todo
  */
 namespace wm {
 namespace detail {
@@ -39,15 +40,23 @@ template <> struct join_impl<EmptyList, EmptyList> { using type = EmptyList; };
 template <is_list lhs> struct join_impl<lhs, EmptyList> { using type = lhs; };
 template <is_list rhs> struct join_impl<EmptyList, rhs> { using type = rhs; };
 
-template <class T> struct to_tuple_impl;
-template <class Val, is_list Next> struct to_tuple_impl<List<Val, Next>> {
-  using type = tuple_cat<std::tuple<Val>, typename to_tuple_impl<Next>::type>;
+template <class T> struct list2tuple_impl;
+template <class Val, is_list Next> struct list2tuple_impl<List<Val, Next>> {
+  using type = tuple_cat<std::tuple<Val>, typename list2tuple_impl<Next>::type>;
 };
-template <> struct to_tuple_impl<EmptyList> { using type = std::tuple<>; };
+template <> struct list2tuple_impl<EmptyList> { using type = std::tuple<>; };
 ;
+template <class Tp, Tp arg, Tp... res> struct make_list_impl {
+  using type =
+      typename join_impl<typename make_list_impl<Tp, arg>::type,
+                         typename make_list_impl<Tp, res...>::type>::type;
+};
+template <class Tp, Tp arg> struct make_list_impl<Tp, arg> {
+  using type = List<std::integral_constant<Tp, arg>>;
+};
 } // namespace detail
 
-template <is_list Root> constexpr uint32_t len = detail::len_impl<Root>::val;
+template <is_list Root> constexpr uint32_t length = detail::len_impl<Root>::val;
 
 template <is_list Root, class Val>
 using push = detail::push_impl<Root, Val>::type;
@@ -55,5 +64,8 @@ using push = detail::push_impl<Root, Val>::type;
 template <is_list lhs, is_list rhs>
 using join = detail::join_impl<lhs, rhs>::type;
 
-template <class T> using to_tuple = detail::to_tuple_impl<T>::type;
+template <class T> using list2tuple = detail::list2tuple_impl<T>::type;
+
+template <class Tp, Tp... args>
+using make_list = detail::make_list_impl<Tp, args...>::type;
 } // namespace wm
