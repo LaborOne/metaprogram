@@ -1,3 +1,5 @@
+// Copyright (c) wm. All rights reserved.
+// Licensed under the MIT License.
 #pragma once
 #include "src/list_base.hpp"
 #include "src/tuple_helper.hpp"
@@ -31,14 +33,15 @@ template <class Val> struct push_impl<EmptyList, Val> {
   using type = List<Val>;
 };
 
-template <is_list lhs, is_list rhs> struct join_impl {
+template <is_list lhs, is_list... res> struct join_impl {
   using type = List<typename lhs::Val,
-                    typename join_impl<typename lhs::Next, rhs>::type>;
+                    typename join_impl<typename lhs::Next, res...>::type>;
 };
-
-template <> struct join_impl<EmptyList, EmptyList> { using type = EmptyList; };
-template <is_list lhs> struct join_impl<lhs, EmptyList> { using type = lhs; };
-template <is_list rhs> struct join_impl<EmptyList, rhs> { using type = rhs; };
+template <> struct join_impl<EmptyList> { using type = EmptyList; };
+template <is_list lhs> struct join_impl<lhs> { using type = lhs; };
+template <is_list... res> struct join_impl<EmptyList, res...> {
+  using type = typename join_impl<res...>::type;
+};
 
 template <class T> struct list2tuple_impl;
 template <class Val, is_list Next> struct list2tuple_impl<List<Val, Next>> {
@@ -56,13 +59,14 @@ template <class Tp, Tp arg> struct make_list_impl<Tp, arg> {
 };
 } // namespace detail
 
-template <is_list Root> constexpr uint32_t length = detail::len_impl<Root>::val;
+template <is_list Root>
+inline constexpr uint32_t length = detail::len_impl<Root>::val;
 
 template <is_list Root, class Val>
 using push = detail::push_impl<Root, Val>::type;
 
-template <is_list lhs, is_list rhs>
-using join = detail::join_impl<lhs, rhs>::type;
+template <is_list lhs, is_list... list>
+using join = detail::join_impl<lhs, list...>::type;
 
 template <class T> using list2tuple = detail::list2tuple_impl<T>::type;
 

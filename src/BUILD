@@ -43,6 +43,6 @@ cc_library(
 cc_library(
   name = "printer",
   hdrs = ["printer.hpp"],
-  deps = ["list_base", "tree_base"],
+  deps = ["list_base", "tree_base", "algorithm"],
   visibility = ["//visibility:public"],
 )

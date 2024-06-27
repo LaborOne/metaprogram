@@ -1,3 +1,5 @@
+// Copyright (c) wm. All rights reserved.
+// Licensed under the MIT License.
 #pragma once
 #include <tuple>
 /*
@@ -7,7 +9,7 @@
 namespace wm {
 template <class T> struct is_tuple : std::false_type {};
 template <class... T> struct is_tuple<std::tuple<T...>> : std::true_type {};
-template <class T> constexpr bool is_tuple_v = is_tuple<T>::value;
+template <class T> inline constexpr bool is_tuple_v = is_tuple<T>::value;
 template <class T> concept IsTuple = is_tuple_v<T>;
 
 namespace detail {

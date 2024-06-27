@@ -1,3 +1,5 @@
+// Copyright (c) wm. All rights reserved.
+// Licensed under the MIT License.
 #pragma once
 #include <type_traits>
 
