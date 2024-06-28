@@ -1,3 +1,6 @@
 build --cxxopt="-std=c++20"
+build --cxxopt="-Werror"
+build --cxxopt="-O3"
+build --cxxopt="-ftemplate-depth=1000000"
 build --action_env="CC=/usr/bin/gcc-11"
 build --action_env="CXX=/usr/bin/g++-11"

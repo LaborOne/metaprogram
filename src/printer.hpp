@@ -3,7 +3,7 @@
 #pragma once
 #include "algorithm.hpp"
 #include "src/list_base.hpp"
-#include "src/tree_base.hpp"
+#include "src/rbtree_base.hpp"
 #include <iostream>
 #include <tuple>
 
@@ -14,17 +14,29 @@
  */
 namespace wm {
 template <class T> struct print;
-template <is_val val, bool is_black, is_node left, is_node right>
-struct print<Node<val, is_black, left, right>> {
-  void operator()() { std::cout << val::value << " "; }
+template <> struct print<Red> {
+  void operator()() { std::cout << "r "; }
+};
+template <> struct print<Black> {
+  void operator()() { std::cout << "b "; }
+};
+template <is_val val, rb_tag tag, is_tree left, is_tree right>
+struct print<Node<val, tag, left, right>> {
+  void operator()() {
+    std::cout << val::value << "-";
+    print<tag>{}();
+  }
 };
 template <> struct print<Empty> {
-  void operator()() { std::cout << "nil "; }
+  void operator()() {
+    std::cout << "nil-";
+    print<Black>{}();
+  }
 };
 template <is_val val> struct print<val> {
   void operator()() { std::cout << val::value << " "; }
 };
-template <is_node val> struct print<val> {
+template <is_tree val> struct print<val> {
   void operator()() { print<val>{}(); }
 };
 template <class node, is_list next> struct print<List<node, next>> {

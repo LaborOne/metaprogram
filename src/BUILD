@@ -15,8 +15,8 @@ cc_library(
 )
 
 cc_library(
-  name = "tree_base",
-  hdrs = ["tree_base.hpp"],
+  name = "rbtree_base",
+  hdrs = ["rbtree_base.hpp"],
   visibility = ["//visibility:public"],
 )
 
@@ -30,19 +30,19 @@ cc_library(
 cc_library(
   name = "algorithm",
   hdrs = ["algorithm.hpp"],
-  deps = ["//src:list_base", "//src:list", "//src:tree_base", "//src:function_operator"],
+  deps = ["//src:list_base", "//src:list", "//src:rbtree_base", "//src:function_operator"],
   visibility = ["//visibility:public"],
 )
 
 cc_library(
-  name = "tree",
-  hdrs = ["tree.hpp"],
-  deps = ["//src:tree_base", "//src:list"],
+  name = "rbtree",
+  hdrs = ["rbtree.hpp"],
+  deps = ["//src:rbtree_base", "//src:list"],
   visibility = ["//visibility:public"],
 )
 cc_library(
   name = "printer",
   hdrs = ["printer.hpp"],
-  deps = ["list_base", "tree_base", "algorithm"],
+  deps = ["list_base", "rbtree_base", "algorithm"],
   visibility = ["//visibility:public"],
 )

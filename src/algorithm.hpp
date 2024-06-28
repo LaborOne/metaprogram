@@ -4,13 +4,14 @@
 #include "src/function_operator.hpp"
 #include "src/list.hpp"
 #include "src/list_base.hpp"
-#include "src/tree_base.hpp"
+#include "src/rbtree_base.hpp"
 #include <type_traits>
 #include <utility>
 
 /*
  * filter :: (list a -> bool) -> list a -> list a
  * map :: (a -> list) -> list a -> list a
+ * size :: a -> int32_t
  * greater :: (is_val a) => a -> a -> bool @ todo use compare_able and operator
  * <.
  * sort :: list a -> list a @ todo use compare_able.
@@ -112,6 +113,17 @@ template <template <typename> class op, is_list list> struct for_each_impl {
   }
 };
 
+template <class> struct size_impl;
+template <class val, is_list next> struct size_impl<List<val, next>> {
+  constexpr static uint32_t cnt = size_impl<next>::cnt + 1;
+};
+template <is_val val, rb_tag tag, is_tree left, is_tree right>
+struct size_impl<Node<val, tag, left, right>> {
+  constexpr static uint32_t cnt =
+      1 + size_impl<left>::cnt + size_impl<right>::cnt;
+};
+template <> struct size_impl<Empty> { constexpr static uint32_t cnt = 0; };
+template <> struct size_impl<EmptyList> { constexpr static uint32_t cnt = 0; };
 } // namespace detail
 template <template <typename> class func, is_list list>
 using filter = detail::filter_impl<func, list>::type;
@@ -120,4 +132,5 @@ using map = detail::map_impl<func, list>::type;
 template <is_list list> using sort = detail::sort_impl<list>::type;
 template <template <typename> class op, is_list list>
 using for_each = detail::for_each_impl<op, list>;
+template <class T> constexpr static uint32_t size = detail::size_impl<T>::cnt;
 } // namespace wm

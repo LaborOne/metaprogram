@@ -16,7 +16,7 @@ void test_sort() {
   using list7 = wm::join<list6, list6>;
   using ret = wm::sort<list7>;
   wm::print_list<ret>{}();
-  std::cout << "list len = " << wm::length<ret> << std::endl;
+  std::cout << "list len = " << wm::size<ret> << std::endl;
 }
 
 int main() {
