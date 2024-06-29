@@ -8,7 +8,6 @@
 
 /*
  * define operator about list
- * length :: list a -> int32_t
  * push :: list a -> a -> list a
  * join :: list a -> list a -> list a
  * list2tuple :: list a -> tuple a
@@ -20,17 +19,12 @@
 namespace wm {
 namespace detail {
 
-template <is_list Root> struct len_impl {
-  constexpr static uint32_t val = 1 + len_impl<typename Root::Next>::val;
+template <is_list root, class val> struct push_impl {
+  using type = List<typename root::Val,
+                    typename push_impl<typename root::Next, val>::type>;
 };
-template <> struct len_impl<EmptyList> { constexpr static uint32_t val = 0; };
-
-template <is_list Root, class Val> struct push_impl {
-  using type = List<typename Root::Val,
-                    typename push_impl<typename Root::Next, Val>::type>;
-};
-template <class Val> struct push_impl<EmptyList, Val> {
-  using type = List<Val>;
+template <class val> struct push_impl<EmptyList, val> {
+  using type = List<val>;
 };
 
 template <is_list lhs, is_list... res> struct join_impl {
@@ -43,9 +37,9 @@ template <is_list... res> struct join_impl<EmptyList, res...> {
   using type = typename join_impl<res...>::type;
 };
 
-template <class T> struct list2tuple_impl;
-template <class Val, is_list Next> struct list2tuple_impl<List<Val, Next>> {
-  using type = tuple_cat<std::tuple<Val>, typename list2tuple_impl<Next>::type>;
+template <class> struct list2tuple_impl;
+template <class val, is_list next> struct list2tuple_impl<List<val, next>> {
+  using type = tuple_cat<std::tuple<val>, typename list2tuple_impl<next>::type>;
 };
 template <> struct list2tuple_impl<EmptyList> { using type = std::tuple<>; };
 ;
@@ -57,13 +51,18 @@ template <class Tp, Tp arg, Tp... res> struct make_list_impl {
 template <class Tp, Tp arg> struct make_list_impl<Tp, arg> {
   using type = List<std::integral_constant<Tp, arg>>;
 };
+
+template <is_list list> struct reverse_impl {
+  using type =
+      typename join_impl<typename reverse_impl<typename list::Next>::type,
+                         List<typename list::Val>>::type;
+};
+
+template <> struct reverse_impl<EmptyList> { using type = EmptyList; };
 } // namespace detail
 
-template <is_list Root>
-inline constexpr uint32_t length = detail::len_impl<Root>::val;
-
-template <is_list Root, class Val>
-using push = detail::push_impl<Root, Val>::type;
+template <is_list root, class Val>
+using push = detail::push_impl<root, Val>::type;
 
 template <is_list lhs, is_list... list>
 using join = detail::join_impl<lhs, list...>::type;
@@ -72,4 +71,5 @@ template <class T> using list2tuple = detail::list2tuple_impl<T>::type;
 
 template <class Tp, Tp... args>
 using make_list = detail::make_list_impl<Tp, args...>::type;
+template <is_list list> using reverse = detail::reverse_impl<list>::type;
 } // namespace wm

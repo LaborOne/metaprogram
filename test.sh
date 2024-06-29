@@ -1,4 +1,5 @@
-bazel run test/test_list &&
-bazel run test/test_tree &&
-bazel run test/test_functor &&
-bazel run test/test_sort
+bazel run test/list &&
+bazel run test/tree &&
+bazel run test/functor &&
+bazel run test/sort &&
+bazel run test/rbtree
