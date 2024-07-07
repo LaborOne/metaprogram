@@ -79,28 +79,12 @@ void test_rotate2() {
   wm::print_list<wm::flat_tree<rotate_right_yl>>{}();
 }
 
-#define RBINSERT(num1, num2, val)                                              \
-  using node##num1 = wm::insert<node##num2, Int<val>>
-void test_rb_tree_insert() {
-  using node0 = wm::insert<wm::Empty, Int<41>>;
-  using node1 = wm::insert<node0, Int<38>>;
-  using node2 = wm::insert<node1, Int<31>>;
-  RBINSERT(3, 2, 12);
-  RBINSERT(4, 3, 19);
-  RBINSERT(5, 4, 8);
-  // RBINSERT(6, 5, 7);
-  // RBINSERT(7, 6, 8);
-  // RBINSERT(8, 7, 9);
-  using ret = node5;
-  wm::print_list<wm::flat_tree<ret>>{}();
-}
 int main() {
   std::cout << "*********begin*********" << std::endl;
-  // std::cout << " ########test rbtree insert, flat, print #####\n";
-  // test_tree();
-  // std::cout << " ########test rbtree rotate #####\n";
-  // test_rotate1();
-  // test_rotate2();
-  test_rb_tree_insert();
+  std::cout << " ########test rbtree insert, flat, print #####\n";
+  test_tree();
+  std::cout << " ########test rbtree rotate #####\n";
+  test_rotate1();
+  test_rotate2();
   std::cout << "*********end*********" << std::endl;
 }

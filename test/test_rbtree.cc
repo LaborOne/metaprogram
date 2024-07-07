@@ -51,8 +51,37 @@ void test_rb_tree_insert() {
   // std::cout << " height = " << wm::height<t1> << ", size = "
   //           << wm::size<t1> << "\n";
 }
+
+void test_rb_tree_delete() {
+  using node0 = wm::insert<wm::Empty, Int<41>>;
+  RBINSERT(1, 0, 38);
+  RBINSERT(2, 1, 31);
+  RBINSERT(3, 2, 12);
+  RBINSERT(4, 3, 19);
+  RBINSERT(5, 4, 8);
+  wm::print_list<wm::flat_tree<node5>>{}();
+  std::cout << "*********delete 8*********" << std::endl;
+  using d1 = wm::delete_node<node5, Int<8>>;
+  wm::print_list<wm::flat_tree<d1>>{}();
+  std::cout << "*********delete 12*********" << std::endl;
+  using d2 = wm::delete_node<d1, Int<12>>;
+  wm::print_list<wm::flat_tree<d2>>{}();
+  std::cout << "*********delete 19*********" << std::endl;
+  using d3 = wm::delete_node<d2, Int<19>>;
+  wm::print_list<wm::flat_tree<d3>>{}();
+  std::cout << "*********delete 31*********" << std::endl;
+  using d4 = wm::delete_node<d3, Int<31>>;
+  wm::print_list<wm::flat_tree<d4>>{}();
+  std::cout << "*********delete 38*********" << std::endl;
+  using d5 = wm::delete_node<d4, Int<38>>;
+  wm::print_list<wm::flat_tree<d5>>{}();
+  std::cout << "*********delete 41*********" << std::endl;
+  using d6 = wm::delete_node<d5, Int<41>>;
+  wm::print_list<wm::flat_tree<d6>>{}();
+}
 int main() {
   std::cout << "*********************begin***********************" << std::endl;
   test_rb_tree_insert();
+  test_rb_tree_delete();
   std::cout << "*********************end*************************" << std::endl;
 }
