@@ -4,8 +4,10 @@
 #include "src/function_operator.hpp"
 #include "src/printer.hpp"
 #include "src/rbtree.hpp"
+#include <cassert>
 #include <iostream>
 #include <type_traits>
+
 
 #define INSERT(num1, num2, val)                                                \
   using Node##num1 = ::wm::insert<Node##num2, Int<val>>;
@@ -27,6 +29,14 @@ void rb_insert() {
   wm::print_list<wm::flat_tree<t>>{}();
   std::cout << " rbtree height = " << wm::height<t> << ", size = "
             << wm::size<t> << "\n";
+}
+
+void test_tuple_flat() {
+  using t1 = std::tuple<int, double, int, double>;
+  using t2 = std::tuple<int, std::tuple<std::tuple<double>, int>, double>;
+  t2 v{1, {{2.0}, 3}, 4.0};
+  t1 r{1, 2.0, 3, 4.0};
+  assert(r == wm::tuple_flat(v));
 }
 
 int main() {
