@@ -65,12 +65,21 @@ concept one_predicate = one_predicate_v<T, val>;
 template <template <typename> class func, is_list list>
     requires is_empty_list<list> ||
     one_predicate<func, typename list::Val> struct filter_impl;
+template <template <typename> class func, is_list list, bool pass>
+struct filter_impl_condition;
+template <template <typename> class func, class val, is_list next>
+struct filter_impl_condition<func, List<val, next>, true> {
+  using type = List<val, typename filter_impl<func, next>::type>;
+};
+template <template <typename> class func, class val, is_list next>
+struct filter_impl_condition<func, List<val, next>, false> {
+  using type = typename filter_impl<func, next>::type;
+};
+
 template <template <typename> class func, class val, is_list next>
 struct filter_impl<func, List<val, next>> {
   using type =
-      std::conditional_t<func<val>::value,
-                         List<val, typename filter_impl<func, next>::type>,
-                         typename filter_impl<func, next>::type>;
+      filter_impl_condition<func, List<val, next>, func<val>::value>::type;
 };
 template <template <typename> class func> struct filter_impl<func, EmptyList> {
   using type = EmptyList;
